@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id               String   @id @default(uuid())
+  email            String
+  phone            String
+  contactRequested Boolean  @default(false)
+  reportId         String   @unique
+  report           Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  capturedAt       DateTime @default(now())
+  createdAt        DateTime @default(now())
+  
+  @@map("leads")
+}
+
+model Report {
+  id             String   @id @default(uuid())
+  city           String
+  state          String
+  timeline       String
+  budget         String
+  workPreference String
+  reportData     Json?
+  aiCost         Float    @default(0)
+  lead           Lead?
+  images         Image[]
+  createdAt      DateTime @default(now())
+  
+  @@map("reports")
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  reportId  String
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  filename  String
+  tag       String
+  path      String
+  createdAt DateTime @default(now())
+  
+  @@map("images")
+}

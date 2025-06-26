@@ -1,0 +1,33 @@
+{
+  "name": "snapvalue",
+  "version": "1.0.0",
+  "description": "AI-powered home value enhancement tool for REALTOR® Anne Marie Velte",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "test": "npm run test:client && npm run test:server",
+    "test:client": "cd client && npm test",
+    "test:server": "cd server && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbonk/Atria-REG-SnapValue.git"
+  },
+  "keywords": [
+    "real-estate",
+    "ai",
+    "lead-generation",
+    "home-improvement"
+  ],
+  "author": "Atria Real Estate Group",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

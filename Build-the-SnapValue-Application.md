@@ -148,7 +148,7 @@ DAILY_COST_ALERT_USD=10
 
 # Operational Alerts
 SPEND_ALERT_CHANNEL=log       # log | email
-OPS_ALERT_EMAIL=ops@example.com
+OPS_ALERT_EMAIL=snapvalue@atriarealestategroup.com
 
 # Rate Limiting
 REPORTS_PER_HOUR=20
@@ -165,13 +165,13 @@ MAX_IMAGES=8
 MAX_IMAGE_MB=10
 
 # Email
-EMAIL_PROVIDER=resend         # resend | smtp
+EMAIL_PROVIDER=smtp         # resend | smtp
 RESEND_API_KEY=
 SMTP_HOST=
 SMTP_PORT=
 SMTP_USER=
 SMTP_PASS=
-LEAD_EMAIL=anne@velte.com
+LEAD_EMAIL=snapvalue@atriarealestategroup.com
 
 # Analytics
 GA_MEASUREMENT_ID=G-PROD123
@@ -180,7 +180,6 @@ GA_MEASUREMENT_ID_STAGING=G-STAGE123
 # Application
 NODE_ENV=production           # staging | production
 PORT=8080
-CALENDLY_URL=https://calendly.com/anne-marie/consult
 
 # Monitoring
 SENTRY_DSN=
@@ -206,13 +205,13 @@ CLEANUP_CRON_TIME=0 2 * * *   # 02:00 UTC daily
 
 ## 11. Development Milestones
 
-| Week | Deliverables |
-|------|--------------|
-| **Week 1** | Core API, health check, rate limiting, basic React scaffold |
-| **Week 2** | AI gateway with failover, PDF generation skeleton, spend tracking |
-| **Week 3** | Database integration, lead capture flow, GA4 events |
-| **Week 4** | Storage abstraction, TTL implementation, cron job, alerting system |
-| **Week 5** | Testing suite (90% coverage), CI/CD pipeline, staging deployment, production launch |
+| Week       | Deliverables                                                 |
+|------------|--------------------------------------------------------------|
+| **Unit 1** | Core API, health check, rate limiting, basic React scaffold  |
+| **Unit 2** | AI gateway with failover, PDF generation skeleton, spend tracking |
+| **Unit 3** | Database integration, lead capture flow, GA4 events          |
+| **Unit 4** | Storage abstraction, TTL implementation, cron job, alerting system |
+| **Unit 5** | Testing suite (90% coverage), CI/CD pipeline, staging deployment, production launch |
 
 ### Weekly Reporting
 - Progress reports due every **Friday at 17:00 CT**
@@ -236,20 +235,17 @@ CLEANUP_CRON_TIME=0 2 * * *   # 02:00 UTC daily
 
 ## 13. Open Questions - Confirm Before Coding
 
-1. **EMAIL_PROVIDER** preference: `resend` vs `smtp` (SendGrid/Postmark)?
+1. **EMAIL_PROVIDER** preference: `smtp` (Google)
 2. **STORAGE_DRIVER** at launch: `local` vs `s3`?
 3. Provide: Logo SVG, brand colors (#hex values), REALTOR® headshot
 4. Confirm: Exact Calendly URL for CTA button
 5. Provide: GA4 staging property ID
-6. Confirm: Are current rate limits (20/hr, 40/day) final for production?
-7. **Alert Recipients**: Who should receive operational alerts?
-8. **SLA Requirements**: Expected uptime and response time targets?
 
 ## First Action
 
 Begin by executing the kick-off command: Create the repository scaffold (`client/`, `server/`, `infra/`) complete with:
 - `Dockerfile` for containerized deployment
-- `.env.example` with all variables listed above
+- .env.local is in Users/tony/Projects/atria-reg-snapvalue with all variables listed above
 - Basic Express server with `/healthz` endpoint
 - Vite + React starter application
 - Railway deployment configuration (`railway.json`)
@@ -257,8 +253,9 @@ Begin by executing the kick-off command: Create the repository scaffold (`client
 - GitHub Actions workflow with coverage gates
 - Basic alerting configuration template
 
-Push this initial structure to a new GitHub repository and provide the URL.
-
+Push this initial structure to the following GitHub repository:
+local:  Users/tony/Projects/atria-reg-snapvalue
+remote: https://github.com/vbonk/Atria-REG-SnapValue
 ---
 
 **Note**: This is a production application for a real business. Prioritize reliability, operational excellence, and user experience. Implement comprehensive monitoring and alerting to ensure issues are caught before they impact users. All user interactions should feel smooth and professional, reflecting positively on REALTOR® Anne Marie Velte and Atria Real Estate Group.
