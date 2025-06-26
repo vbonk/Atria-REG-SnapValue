@@ -1,7 +1,11 @@
 // server/routes/lead.js
 const express = require('express');
 const { z } = require('zod');
-const { prisma } = require('../db');
+// Import prisma only if DATABASE_URL is available
+let prisma = null;
+if (process.env.DATABASE_URL) {
+  prisma = require('../db').prisma;
+}
 const { EmailNotifier } = require('../services/EmailNotifier');
 const WebhookNotifier = require('../services/WebhookNotifier');
 const MultiNotifier = require('../services/MultiNotifier');
@@ -60,6 +64,14 @@ router.post('/api/lead', async (req, res) => {
     const requestId = req.id; // Assuming middleware adds this
     
     try {
+        // Check if database is available
+        if (!prisma) {
+            return res.status(503).json({
+                error: 'Database not available - service starting up',
+                requestId
+            });
+        }
+
         // Validate request body
         const validatedData = leadSchema.parse(req.body);
         const { email, phone, contactMe, reportId } = validatedData;

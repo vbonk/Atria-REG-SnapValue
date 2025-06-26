@@ -37,13 +37,31 @@ app.use((req, res, next) => {
 });
 
 // Health check endpoint
-app.get('/healthz', (req, res) => {
-  res.status(200).json({
+app.get('/healthz', async (req, res) => {
+  const health = {
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    requestId: req.id
-  });
+    requestId: req.id,
+    database: false
+  };
+
+  // Check database connectivity if DATABASE_URL is provided
+  if (process.env.DATABASE_URL) {
+    try {
+      const { prisma } = require('./db');
+      await prisma.$queryRaw`SELECT 1`;
+      health.database = true;
+    } catch (error) {
+      console.error('Database health check failed:', error.message);
+      health.database = false;
+      health.status = 'degraded';
+    }
+  } else {
+    console.warn('DATABASE_URL not provided - database health check skipped');
+  }
+
+  res.status(200).json(health);
 });
 
 // Routes
