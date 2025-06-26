@@ -1,22 +1,27 @@
 # Use Node.js 18 LTS
 FROM node:18-alpine
 
+# Install curl for health checks
+RUN apk add --no-cache curl
+
 # Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 COPY server/package*.json ./server/
+COPY client/package*.json ./client/
 
-# Install dependencies
-RUN npm ci --only=production
+# Install all dependencies (including dev dependencies for build)
+RUN npm install
 RUN cd server && npm ci --only=production
+RUN cd client && npm install
 
 # Copy application code
 COPY . .
 
-# Copy client build (will be created by build process)
-COPY client/dist ./client/dist
+# Build the client
+RUN npm run build:client
 
 # Generate Prisma client
 RUN cd server && npx prisma generate
