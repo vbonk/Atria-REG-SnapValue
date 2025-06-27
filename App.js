@@ -330,6 +330,16 @@ export default function App() {
         updateState({ error: '', step: step - 1 });
     };
 
+    // Convert file to base64
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
     // --- File Dropzone Configuration ---
     const onDrop = useCallback(async (acceptedFiles) => {
         if (files.length + acceptedFiles.length > 8) {
@@ -345,12 +355,18 @@ export default function App() {
             const fileId = `${file.name}-${file.size}`;
             if (!existingFileIds.has(fileId)) {
                 existingFileIds.add(fileId);
-                newFiles.push({
-                    file: file,
-                    preview: URL.createObjectURL(file),
-                    tag: '',
-                    id: fileId
-                });
+                try {
+                    const base64 = await fileToBase64(file);
+                    newFiles.push({
+                        file: file,
+                        preview: base64,
+                        tag: '',
+                        id: fileId
+                    });
+                } catch (err) {
+                    console.error('Error converting file to base64:', err);
+                    errorMsg = `Failed to process "${file.name}"`;
+                }
             } else {
                 errorMsg = `Duplicate photo "${file.name}" was ignored.`;
             }
@@ -385,17 +401,23 @@ export default function App() {
     const handleReplaceFile = async (e) => {
         const file = e.target.files[0];
         if (file && replacingIndex !== null) {
-            const fileId = `${file.name}-${file.size}`;
-            const newFiles = [...files];
-            const oldTag = newFiles[replacingIndex].tag;
-            newFiles[replacingIndex] = {
-                file: file,
-                preview: URL.createObjectURL(file),
-                tag: oldTag,
-                id: fileId
-            };
-            updateState({ files: newFiles });
-            setReplacingIndex(null);
+            try {
+                const fileId = `${file.name}-${file.size}`;
+                const base64 = await fileToBase64(file);
+                const newFiles = [...files];
+                const oldTag = newFiles[replacingIndex].tag;
+                newFiles[replacingIndex] = {
+                    file: file,
+                    preview: base64,
+                    tag: oldTag,
+                    id: fileId
+                };
+                updateState({ files: newFiles });
+                setReplacingIndex(null);
+            } catch (err) {
+                console.error('Error converting replacement file to base64:', err);
+                updateState({ error: `Failed to process "${file.name}"` });
+            }
         }
         e.target.value = null;
     };
