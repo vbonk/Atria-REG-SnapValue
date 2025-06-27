@@ -4,30 +4,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-### Installation
+### Initial Setup
 ```bash
 npm run install:all    # Install dependencies for root, client, and server
+cp .env.example .env.local  # Create local environment file
+cd server && npx prisma db push  # Set up database schema
 ```
 
 ### Development
 ```bash
 npm run dev            # Run both client and server in development mode
-npm run dev:client     # Run React frontend only (Vite dev server)
-npm run dev:server     # Run Express backend only
+npm run dev:client     # Run React frontend only (Vite dev server on port 3000)
+npm run dev:server     # Run Express backend only (port 8080)
+```
+
+### Database Operations
+```bash
+cd server && npx prisma db push      # Apply schema changes to database
+cd server && npx prisma db pull      # Pull schema changes from database
+cd server && npx prisma studio       # Open Prisma Studio for database management
+cd server && npx prisma generate     # Regenerate Prisma client after schema changes
 ```
 
 ### Build
 ```bash
 npm run build          # Build both client and server for production
-npm run build:client   # Build React frontend
-npm run build:server   # Build Express backend
+npm run build:client   # Build React frontend (outputs to client/dist/)
+npm run build:server   # No-op for Node.js (server runs directly)
 ```
 
 ### Testing
 ```bash
 npm test               # Run tests for both client and server
-npm run test:client    # Run frontend tests
-npm run test:server    # Run backend tests
+npm run test:client    # Run frontend tests (currently none)
+npm run test:server    # Run backend tests with Jest
 ```
 
 ## Architecture Overview
@@ -44,13 +54,18 @@ SnapValue is a monolithic full-stack application designed as a lead-generation t
 ### Repository Structure
 ```
 root/
-├── client/          # React frontend application
-│   └── src/App.js   # Complete 4-step wizard implementation
-├── server/          # Express backend monolith
-│   ├── routes/      # API route handlers
-│   └── services/    # Notification services (Email, Webhook, Multi)
-├── infra/           # Deployment configuration
-└── docs/            # Design documentation
+├── client/                    # React frontend (Vite + Tailwind CSS)
+│   ├── src/App.jsx           # Complete 4-step wizard implementation
+│   ├── vite.config.js        # Vite config with proxy to backend port 8080
+│   └── tailwind.config.js    # Custom Atria brand colors and fonts
+├── server/                   # Express backend monolith
+│   ├── index.js             # Main server entry point
+│   ├── routes/lead.js       # Lead capture endpoint implementation
+│   ├── services/            # Notification services (Email, Webhook, Multi)
+│   ├── prisma/schema.prisma # Database schema (Lead, Report, Image models)
+│   └── utils/logger.js      # Winston logging setup
+├── .env.example             # Environment variables template
+└── docs/                    # Design documentation
 ```
 
 ### Key Features Implemented
