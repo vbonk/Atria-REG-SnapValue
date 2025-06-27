@@ -72,6 +72,13 @@ try {
   console.error('Failed to load lead routes:', error.message);
 }
 
+try {
+  app.use(require('./routes/analyze'));
+  console.log('Analyze routes loaded successfully');
+} catch (error) {
+  console.error('Failed to load analyze routes:', error.message);
+}
+
 // Serve static files from client build (for production)
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/dist')));

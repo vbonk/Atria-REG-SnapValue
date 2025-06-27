@@ -466,24 +466,25 @@ export default function App() {
         trackEvent('report_started');
 
         try {
-            const formData = new FormData();
-            
-            // Add images
-            files.forEach((fileObj, index) => {
-                formData.append('images', fileObj.file);
-                formData.append(`tags[${index}]`, fileObj.tag);
-            });
-            
-            // Add property details
-            formData.append('city', city);
-            formData.append('state', stateName);
-            formData.append('timeline', timeline);
-            formData.append('budget', budget);
-            formData.append('workPreference', workPreference);
+            // Prepare JSON payload with base64 images
+            const payload = {
+                images: files.map(fileObj => ({
+                    data: fileObj.preview, // This is now base64
+                    tag: fileObj.tag
+                })),
+                city: city,
+                state: stateName,
+                timeline: timeline,
+                budget: budget,
+                workPreference: workPreference
+            };
 
             const response = await fetch(`${API_BASE_URL}/api/analyze`, {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
             });
 
             // Log request ID
