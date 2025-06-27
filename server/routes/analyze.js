@@ -71,6 +71,9 @@ router.post('/api/analyze', async (req, res) => {
   const requestId = req.id;
   
   try {
+    // Log the request body for debugging
+    console.log(`Analyze request body [${requestId}]:`, JSON.stringify(req.body).slice(0, 200));
+    
     // Validate request body
     const validatedData = analyzeSchema.parse(req.body);
     
